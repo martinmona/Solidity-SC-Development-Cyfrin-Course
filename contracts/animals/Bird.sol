@@ -2,13 +2,13 @@
 
 pragma solidity ^0.8.30;
 
-contract Bird {
-    string private name;
-    constructor(string memory _name) {
-        name = _name;
+import { Animal } from "./Animal.sol";
+
+contract Bird is Animal {
+    constructor(string memory _name) Animal(_name) {
     }
 
-    function getName() public view returns (string memory) {
-        return name;
+    function emitSound() public virtual view override returns (string memory) {
+        return "Chirp!";
     }
 }
