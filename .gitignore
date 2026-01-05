@@ -1,0 +1,27 @@
+# Dependencias de Node.js
+node_modules/
+package-lock.json
+yarn.lock
+
+# Entorno local
+.env
+.env.local
+.env.*.local
+
+# Remix IDE
+.remix/
+remix-projects/
+
+# Hardhat/Foundry
+artifacts/
+cache/
+.states/
+.remix/
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+.deps/
