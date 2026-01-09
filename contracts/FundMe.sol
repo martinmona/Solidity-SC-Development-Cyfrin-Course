@@ -7,7 +7,8 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 contract FundMe {
     AggregatorV3Interface internal dataFeed;
     uint256 public minimumUsd = 5e18;
-    uint256 public balance = 0;
+    address[] public funders;
+    mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
 
     constructor() {
         dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
@@ -15,7 +16,8 @@ contract FundMe {
     
     function found() public payable {
         require(getConversionRate(msg.value) > minimumUsd, "didn't send enough ETH");
-        balance += msg.value;
+        funders.push(msg.sender);
+        addressToAmountFunded[msg.sender] += msg.value;
     }
 
     function widthraw() public {}
