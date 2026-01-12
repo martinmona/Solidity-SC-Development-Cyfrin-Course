@@ -18,5 +18,23 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = msg.value.sum(addressToAmountFunded[msg.sender]);
     }
 
-    function widthraw() public {}
+    function widthrawAll() public {
+        for(uint256 i = 0; i < funders.length; i++) {
+            address funder = funders[i];
+            addressToAmountFunded[funder] = 0;
+        }
+        funders = new address[](0);
+        
+        // Using transfer
+        //payable(msg.sender).transfer(address(this).balance);
+        
+        // Using send
+        // bool success = payable(msg.sender).send(address(this).balance);
+        // require(success, "Send failed");
+
+        // Using call
+        (bool success,) = payable(msg.sender).call{value: address(this).balance}("");
+        require(success, "call failed");
+
+    }
 }
