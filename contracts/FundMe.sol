@@ -19,7 +19,7 @@ contract FundMe {
         i_owner = msg.sender;
     }
     
-    function found() public payable {
+    function fund() public payable {
         require(msg.value.getConversionRate() > MINIMUM_USD, "didn't send enough ETH");
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] = msg.value.sum(addressToAmountFunded[msg.sender]);
