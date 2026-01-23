@@ -7,7 +7,6 @@ import {PriceConverter} from "./PriceConverter.sol";
 error NotOwner();
 
 contract FundMe {
-    using MathLibrary for uint256;
     using PriceConverter for uint256;
     uint256 public constant MINIMUM_USD = 5e18;
     address[] public funders;
@@ -26,9 +25,7 @@ contract FundMe {
             "didn't send enough ETH"
         );
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = msg.value.sum(
-            addressToAmountFunded[msg.sender]
-        );
+        addressToAmountFunded[msg.sender] += msg.value.getConversionRate();
     }
 
     function widthrawAll() public onlyOwner {
