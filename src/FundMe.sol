@@ -10,9 +10,9 @@ error NotOwner();
 contract FundMe {
     using PriceConverter for uint256;
     uint256 public constant MINIMUM_USD = 5e18;
-    address[] public funders;
+    address[] private s_funders;
     mapping(address funder => uint256 amountFunded)
-        public addressToAmountFunded;
+        private s_addressToAmountFunded;
 
     address public immutable i_owner;
     AggregatorV3Interface public s_priceFeed;
@@ -27,18 +27,16 @@ contract FundMe {
             msg.value.getConversionRate(s_priceFeed) > MINIMUM_USD,
             "didn't send enough ETH"
         );
-        funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] += msg.value.getConversionRate(
-            s_priceFeed
-        );
+        s_funders.push(msg.sender);
+        s_addressToAmountFunded[msg.sender] += msg.value;
     }
 
     function widthrawAll() public onlyOwner {
-        for (uint256 i = 0; i < funders.length; i++) {
-            address funder = funders[i];
-            addressToAmountFunded[funder] = 0;
+        for (uint256 i = 0; i < s_funders.length; i++) {
+            address funder = s_funders[i];
+            s_addressToAmountFunded[funder] = 0;
         }
-        funders = new address[](0);
+        s_funders = new address[](0);
 
         // Using transfer
         //payable(msg.sender).transfer(address(this).balance);
@@ -72,5 +70,18 @@ contract FundMe {
 
     fallback() external payable {
         fund();
+    }
+
+    /**
+     * View / pure functions
+     */
+    function getAddressToAmountFunded(
+        address funder
+    ) external view returns (uint256) {
+        return s_addressToAmountFunded[funder];
+    }
+
+    function getFunders(uint256 index) external view returns (address) {
+        return s_funders[index];
     }
 }

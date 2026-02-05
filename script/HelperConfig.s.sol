@@ -15,6 +15,8 @@ contract HelperConfig is Script {
     uint256 public constant ETH_SEPOLIA_CHAIN_ID = 11155111;
     uint256 public constant ZKSYNC_SEPOLIA_CHAIN_ID = 300;
     uint256 public constant LOCAL_CHAIN_ID = 31337;
+    int256 public constant INITIAL_PRICE = 2000e8;
+    uint8 public constant DECIMALS = 8;
 
     constructor() {
         if (block.chainid == ETH_SEPOLIA_CHAIN_ID) {
@@ -52,7 +54,10 @@ contract HelperConfig is Script {
         }
 
         vm.startBroadcast();
-        MockV3Aggregator mockPriceFeed = new MockV3Aggregator(18, 2000e18);
+        MockV3Aggregator mockPriceFeed = new MockV3Aggregator(
+            DECIMALS,
+            INITIAL_PRICE
+        );
         vm.stopBroadcast();
 
         return NetworkConfig({priceFeed: address(mockPriceFeed)});
